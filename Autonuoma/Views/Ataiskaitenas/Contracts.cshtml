@@ -1,0 +1,137 @@
+@model Org.Ktu.Isk.P175B602.Autonuoma.Models.Ataiskaitenas.ReportAtaskaitenas
+
+@* this will also be used as page title in main layout *@
+@{ ViewData["title"] = "Mokejimu ataskaita"; }
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+</div>
+
+@* content itself *@
+<div class="main-content-rep">
+@using( Html.BeginForm(FormMethod.Get, new { @class="rep" }) )
+{
+	<p><strong>Parengta:</strong> @String.Format("{0:yyyy-MM-dd HH:mm}", DateTime.Now)</p>
+
+	
+
+	@* filter section *@
+	<div class="filter">
+		<div class="fields">
+			<div class="field">
+				<label>Mokejimai nuo:</label>
+				@Html.TextBoxFor(m => m.DateFrom, "{0:yyyy-MM-dd}", new { @class = "date-picker" })
+			</div>
+
+			<div class="field">
+				<label>Mokejimai iki:</label>
+				@Html.TextBoxFor(m => m.DateTo, "{0:yyyy-MM-dd}", new { @class = "date-picker" })
+			</div>
+
+
+			<div class="field">
+				<label>Bendra suma nuo:</label>
+				@Html.EditorFor(m => m.SumaNuo)
+			</div>
+			@{
+    // Create SelectListItem objects for each option
+    			var paymentOptions = new List<SelectListItem>
+    			{
+        			new SelectListItem { Text = "Apmoketi", Value = "0" },
+        			new SelectListItem { Text = "Neapmoketi", Value = "1" },
+        			new SelectListItem { Text = "Visi", Value = "2" }
+    			};
+			}
+			<div class="field">
+    		<label>Apmoketi mokejimai?</label>
+    		@Html.DropDownListFor(m => m.Apmoketas,paymentOptions, (string)ViewData["none-chosen"])
+</div>
+		</div>
+
+		<div class="buttons">
+			<button class="btn btn-success"><i class="fa-solid fa-filter"></i> Atrinkti</button>
+		</div>
+	</div>
+
+	@* report data *@
+	<table class="report">
+		<thead>
+			<tr>
+				<th>@Html.DisplayNameFor(m => m.Sutartys[0].Nr)</th>
+				<th>@Html.DisplayNameFor(m => m.Sutartys[0].MokejimoData)</th>
+				<th>@Html.DisplayNameFor(m => m.Sutartys[0].Apmoketas)</th>
+				<th>@Html.DisplayNameFor(m => m.Sutartys[0].Kaina)</th>
+				<th>@Html.DisplayNameFor(m => m.Sutartys[0].Maksimalus)</th>
+				<th>@Html.DisplayNameFor(m => m.Sutartys[0].AtliktaMokejimu)</th>	
+			</tr>
+		</thead>
+		<tbody>
+			@if( Model.Sutartys.Count == 0 )
+			{
+				@* no data message *@
+				<tr class="no-data-msg">
+					<td colspan="5" align="center">Nurodytame laikotarpyje nebuvo sudaryta sutarčių</td>
+				</tr>
+			}
+			else 
+			{
+				@* groups *@
+				@for( int i = 0; i < Model.Sutartys.Count; i++ )
+				{
+					@* group header *@
+					if( i == 0 || Model.Sutartys[i].kID != Model.Sutartys[i-1].kID )
+					{
+						<tr class="group-header">
+							<td 
+								colspan="6" 
+								align="center"
+							>
+								
+								<b>@Html.DisplayFor(m => Model.Sutartys[i].Inicialai)</b>
+								<b>@Html.DisplayFor(m => Model.Sutartys[i].VardasPilnas)</b>
+								<b>@Html.DisplayFor(m => Model.Sutartys[i].Email)</b>
+								
+							</td>
+						</tr>
+					}
+
+					@* group content *@
+					<tr>
+						<td>#@Html.DisplayFor(m => Model.Sutartys[i].Nr)</td>
+						<td>@Html.DisplayFor(m => Model.Sutartys[i].MokejimoData)</td>
+						<th>@Html.DisplayFor(m => Model.Sutartys[i].Apmoketas)</th>
+						<td>@Html.DisplayFor(m => Model.Sutartys[i].Kaina)</td>
+
+					</tr>
+
+					@* group total *@
+					if( i == Model.Sutartys.Count-1 || Model.Sutartys[i].kID != Model.Sutartys[i + 1].kID )
+					{
+						<tr>
+							<td colspan="3"></td>
+							<td><b>@Html.DisplayFor(m => Model.Sutartys[i].BendraSuma)</b></td>
+							<td><b>@Html.DisplayFor(m => Model.Sutartys[i].Maksimalus)</b></td>
+							<td><b>@Html.DisplayFor(m => Model.Sutartys[i].AtliktaMokejimu)</b></td>
+						</tr>
+					}
+				}
+				
+				@* grand total *@
+				<tr class="grand-total-header">
+					<td colspan="6" align="center"><b>Viso</b></td>
+				</tr>
+
+				<tr>
+					<td colspan="3"></td>
+					<td>
+						@Html.DisplayFor(m => Model.VisoSumaMokejimu)
+					</td>
+					<td>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+</div>

@@ -1,0 +1,71 @@
+@model IEnumerable<Org.Ktu.Isk.P175B602.Autonuoma.Models.InventoriusList>
+
+@* this will also be used as page title in main layout *@
+@{ ViewData["title"] = "Inventorius"; }
+
+@* content header *@
+
+
+@* content itself *@
+<div class="main-content-lst">
+	<table class="entity-list">
+		<thead>
+			<tr>
+				<th>
+					@Html.DisplayNameFor(m => m.Id)
+				</th>
+				<th>
+					@Html.DisplayNameFor(m => m.Filmo_pavadinimas)
+				</th>
+				<th>
+					@Html.DisplayNameFor(m => m.Trukme)
+				</th>
+				<th>
+					@Html.DisplayNameFor(m => m.Kaina)
+				</th>
+				<th>
+					@Html.DisplayNameFor(m => m.Isleidimo_data)
+				</th>
+                <th>
+					@Html.DisplayNameFor(m => m.Kategorija)
+				</th>
+                <th>
+					@Html.DisplayNameFor(m => m.Kiekis)
+				</th>
+                <th>
+					@Html.DisplayNameFor(m => m.Ivertinimas)
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model) {
+			<tr>
+				<td>
+					@Html.DisplayFor(m => item.Id)
+				</td>
+				<td>
+					@Html.DisplayFor(m => item.Filmo_pavadinimas)
+				</td>
+				<td>
+					@Html.DisplayFor(m => item.Trukme)
+				</td>
+				<td>
+					@Html.DisplayFor(m => item.Kaina)
+				</td>
+				<td>
+					@Html.DisplayFor(m => item.Isleidimo_data)
+				</td>
+                <td>
+					@Html.DisplayFor(m => item.Kategorija)
+				</td>
+                <td>
+					@Html.DisplayFor(m => item.Kiekis)
+				</td>
+                <td>
+					@Html.DisplayFor(m => item.Ivertinimas)
+				</td>
+			</tr>
+			}
+		</tbody>
+	</table>
+</div>

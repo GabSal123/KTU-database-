@@ -1,0 +1,99 @@
+@model Org.Ktu.Isk.P175B602.Autonuoma.Models.FilmasCE
+
+@* this will also be used as page title in main layout *@
+@{ ViewData["title"] = "Sutarties sukūrimas (F2)"; }
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-ced">
+@using( Html.BeginForm(FormMethod.Post, new { @class="entity-ce" }) )
+{
+	@Html.AntiForgeryToken()
+
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+	@* add hidden form fields for non-visible properties, otherwise they will get lost in code that handles button presses *@
+	@Html.HiddenFor(m => m.Filmas.Id)
+
+	<fieldset>
+		<legend class="text-center">Filmas</legend>
+
+        <div class="form-group">
+			@Html.LabelFor(m => m.Filmas.Pavadinimas)
+			@Html.EditorFor(m => m.Filmas.Pavadinimas)
+			@Html.ValidationMessageFor(m => m.Filmas.Pavadinimas, "")
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.Filmas.Isleidimo_data)
+			@Html.TextBoxFor(m => m.Filmas.Isleidimo_data, "{0:yyyy-MM-dd}", new { @class = "date-picker" })
+			@Html.ValidationMessageFor(m => m.Filmas.Isleidimo_data, "")
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.Filmas.Kategorija)
+			@Html.DropDownListFor(m => m.Filmas.Kategorija, Model.Lists.Kategorijos, (string)ViewData["none-chosen"])
+			@Html.ValidationMessageFor(m => m.Filmas.Kategorija, "")
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.Filmas.Tiekejas)
+			@Html.DropDownListFor(m => m.Filmas.Tiekejas, Model.Lists.Tiekejai, (string)ViewData["none-chosen"])
+			@Html.ValidationMessageFor(m => m.Filmas.Tiekejas, "")
+		</div>
+
+
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.Filmas.Trukme)
+			@Html.EditorFor(m => m.Filmas.Trukme)
+			@Html.ValidationMessageFor(m => m.Filmas.Trukme, "")
+		</div>
+
+        <div class="form-group">
+			@Html.LabelFor(m => m.Filmas.Aprasymas)
+			@Html.EditorFor(m => m.Filmas.Aprasymas)
+			@Html.ValidationMessageFor(m => m.Filmas.Aprasymas, "")
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.Filmas.Kaina)
+			@Html.EditorFor(m => m.Filmas.Kaina)
+			@Html.ValidationMessageFor(m => m.Filmas.Kaina, "")
+		</div>
+	</fieldset>
+
+	
+
+
+
+	<div class="container-fluid d-flex d-row justify-content-end">
+		<button name="save" value="1" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Išsaugoti</button>
+	</div>
+}
+</div>
+
+@* content footer *@
+<div class="main-content-footer">
+	<span class="title"></span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>

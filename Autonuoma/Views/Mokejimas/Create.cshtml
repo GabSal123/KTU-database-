@@ -1,0 +1,169 @@
+@model Org.Ktu.Isk.P175B602.Autonuoma.Models.MokejimasCE
+
+@* this will also be used as page title in main layout *@
+@{ ViewData["title"] = "Mokejimo sukurimas"; }
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-ced">
+@using( Html.BeginForm(FormMethod.Post, new { @class="entity-ce" }) )
+{
+	@Html.AntiForgeryToken()
+
+	@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+	
+
+	@if (!ViewData.ModelState.IsValid && Model.uzsakytiFilmai.Count == 0)
+	{	
+		<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+	}else if(!ViewData.ModelState.IsValid){
+		<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+	}
+	else{
+		@Html.HiddenFor(m=>m.mokejimas.Id)
+
+    <fieldset>
+        <legend class="text-center">Mokejimas</legend>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.mokejimas.Mokejimo_data)
+			@Html.TextBoxFor(m => m.mokejimas.Mokejimo_data, "{0:yyyy-MM-dd}", new { @class = "date-picker" })
+			@Html.ValidationMessageFor(m => m.mokejimas.Mokejimo_data, "")
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.mokejimas.Darbuotojo_id)
+			@Html.DropDownListFor(m => m.mokejimas.Darbuotojo_id, Model.Lists.Darbuotojai, (string)ViewData["none-chosen"])
+			@Html.ValidationMessageFor(m => m.mokejimas.Darbuotojo_id, "")
+		</div>
+
+        <div class="form-group">
+			@Html.LabelFor(m => m.mokejimas.Kliento_id)
+			@Html.DropDownListFor(m => m.mokejimas.Kliento_id, Model.Lists.Klientai, (string)ViewData["none-chosen"])
+			@Html.ValidationMessageFor(m => m.mokejimas.Kliento_id, "")
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(m => m.mokejimas.Apmoketas)
+			@Html.DropDownListFor(m => m.mokejimas.Apmoketas, Model.Lists.Apmokejimas, (string)ViewData["none-chosen"])
+			@Html.ValidationMessageFor(m => m.mokejimas.Apmoketas, "")
+		</div>
+
+
+
+
+    </fieldset>
+
+	<fieldset>
+		<div class="container-fluid d-flex d-row justify-content-between align-items-center">
+			<span></span>
+			<legend style="width: unset; margin-bottom: 0px;">Filmai</legend>
+			<button
+				name="add"
+				value="1"
+				formnovalidate @*ASP.NET Core magic attribute to prevent client side validation when submit button is clicked*@
+				formaction="@Url.Action()#listEnd"
+				class="btn btn-info"
+			><i class="fa-solid fa-plus"></i> Pridėti</button>
+		</div>
+
+		<table>
+			<thead>
+				<tr>
+					<th>Filmas</th>
+					<th>Kiekis</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@for( var i = 0; i < Model.uzsakytiFilmai.Count; i++ ) {
+				<tr>
+					<td class="form-group">
+						@* add hidden form fields for non-visible properties, otherwise they will get lost in code that handles button presses *@
+						@Html.HiddenFor(m => m.uzsakytiFilmai[i].InListID)
+
+						@Html.DropDownListFor(
+							m => m.uzsakytiFilmai[i].Filmas, 
+							Model.Lists.Filmai, 
+							(string)ViewData["none-chosen"]
+						)
+						@Html.ValidationMessageFor(m => m.uzsakytiFilmai[i].Filmas, "",new { @class = "text-danger" })
+					</td>
+					<td class="form-group">
+						@Html.EditorFor(m => m.uzsakytiFilmai[i].Kiekis)
+						@Html.ValidationMessageFor(m => m.uzsakytiFilmai[i].Kiekis, "",new { @class = "text-danger" })
+					</td>
+
+					<td>
+						<button
+							name="remove"
+							value="@Model.uzsakytiFilmai[i].InListID"
+							formnovalidate @*ASP.NET Core magic attribute to prevent client side validation when submit button is clicked*@
+							formaction="@Url.Action()#listEnd"
+							class="btn btn-danger"							
+						><i class="fa-solid fa-trash"></i> Šalinti</button>
+					</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+
+		@* this is used as a marker to automatically scroll down to the end of items list when returning from button presses *@
+		<span id="listEnd"></span>
+	
+	</fieldset>
+
+	
+	
+	<div class="container-fluid d-flex d-row justify-content-end">
+		<button name="save" value="1" class="btn btn-success"><i class="fa-solid fa-floppy-disk"></i> Išsaugoti</button>
+	</div>
+	}
+
+	@* add hidden form fields for non-visible properties, otherwise they will get lost in code that handles button presses *@
+
+
+
+
+    
+}
+</div>
+
+@* content footer *@
+<div class="main-content-footer">
+	<span class="title"></span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>

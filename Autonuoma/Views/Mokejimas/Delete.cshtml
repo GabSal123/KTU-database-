@@ -1,0 +1,71 @@
+@model Org.Ktu.Isk.P175B602.Autonuoma.Models.MokejimasCE
+
+@* this will also be used as page title in main layout *@
+@{ ViewData["title"] = "Mokejimo šalinimas"; }
+
+@* content header *@
+<div class="main-content-header">
+	<span class="title">@ViewData["title"]</span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>
+
+@* content itself *@
+<div class="main-content-ced">
+@using( Html.BeginForm(FormMethod.Post, new { @class="entity-d" }) )
+{
+	@Html.AntiForgeryToken()
+
+	<fieldset>
+		<legend class="confirm-msg">Ar tikrai norite šalinti mokejima??</legend>
+
+		<dl>
+			<dt>@Html.DisplayNameFor(m => m.mokejimas.Id)</dt>
+			<dd>@Html.DisplayFor(m => m.mokejimas.Id)</dd>
+
+			<dt>@Html.DisplayNameFor(m => m.mokejimas.Mokejimo_data)</dt>
+			<dd>@String.Format("{0:yyyy-MM-dd}", Model.mokejimas.Mokejimo_data)</dd>
+
+			<dt>@Html.DisplayNameFor(m => m.mokejimas.Kaina)</dt>
+			<dd>@Html.DisplayFor(m => m.mokejimas.Kaina)</dd>			
+		</dl>
+
+		@if( ViewData["deletionNotPermitted"] != null )
+		{
+			<div class="fail-msg">
+				<i class="fa-solid fa-circle-exclamation"></i> Šios sutaries pašalinti negalima, 
+				nes ji yra <i>Apmoketa</i>.
+			</div>
+		}
+		else
+		{
+			<div class="buttons">
+				<button
+					formaction="@Url.Action("DeleteConfirm", new {id = Model.mokejimas.Id})"
+					class="btn btn-danger"
+					style="white-space: nowrap;"
+				><i class="fa-solid fa-trash"></i> Šalinti</button>
+			</div>			
+		}
+	</fieldset>
+}
+</div>
+
+@* content footer *@
+<div class="main-content-footer">
+	<span class="title"></span>
+	<span class="actions">
+		<a 
+			href="@Url.Action("Index")" 
+			class="btn btn-outline-primary btn-sm"
+		>
+			<i class="fa-solid fa-angles-left"></i> Atgal į sarašą
+		</a>
+	</span>
+</div>
